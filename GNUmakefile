@@ -1,5 +1,5 @@
 CFLAGS = -g -Ilibtags/src
-PROGS = m3print m3sort
+PROGS = m3grep m3print m3sort
 ALL = $(PROGS)
 
 LIBTAGS_CFLAGS = \
@@ -21,8 +21,8 @@ LIBTAGS_OBJS =\
 all : $(ALL)
 
 $(PROGS) : % : %.o
-m3print m3sort : m3u.o tags.o
-m3print m3sort : $(LIBTAGS_OBJS)
+m3grep m3print m3sort : m3u.o tags.o
+m3grep m3print m3sort : $(LIBTAGS_OBJS)
 
 README: man/m3utils.7
 	mandoc -Tutf8 $< | col -bx >$@
