@@ -1,29 +1,15 @@
-#include <fcntl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "m3u.h"
-#include "tags.h"
+#include "m3utils.h"
 
 struct file {
-	char *file;
 	long idx;
-	char *artist;
-	char *album;
-	char *title;
-	int channels;
-	int samplerate;
-	int bitrate;
-	int duration;
-	int format;
-};
-
-struct aux {
-	int fd;
-	struct file *file;
+	char *file;
+	struct tags tags;
 };
 
 struct file *files;
@@ -33,72 +19,35 @@ long idx = 0;
 static int (*sortorders[16])(const void *, const void *);
 int order_idx;
 
-static char buf[256];
-
-static int
-ctxread(Tagctx *ctx, void *buf, int n)
-{
-	struct aux *a = ctx->aux;
-	return read(a->fd, buf, n);
-}
-
-static int
-ctxseek(Tagctx *ctx, int offset, int whence)
-{
-	struct aux *a = ctx->aux;
-	return lseek(a->fd, offset, whence);
-}
-
-static void
-cb(Tagctx *ctx, int t, const char *v, int offset, int size, Tagread f)
-{
-	struct file *fp = ((struct aux *)ctx->aux)->file;
-	switch (t) {
-	case Tartist: fp->artist = strdup(v); break;
-	case Talbum: fp->album = strdup(v); break;
-	case Ttitle: fp->title = strdup(v); break;
-	}
-}
-
-struct aux aux;
-Tagctx ctx = {
-	.read = ctxread,
-	.seek = ctxseek,
-	.tag = cb,
-	.buf = buf,
-	.bufsz = sizeof (buf),
-	.aux = &aux,
-};
-
 int
 albumorder(const void *a, const void *b)
 {
-	struct file *ia = (struct file *)a;
-	struct file *ib = (struct file *)b;
+	struct tags *ia = &((struct file *)a)->tags;
+	struct tags *ib = &((struct file *)b)->tags;
 	return strcmp(ia->album, ib->album);
 }
 
 int
 artistorder(const void *a, const void *b)
 {
-	struct file *ia = (struct file *)a;
-	struct file *ib = (struct file *)b;
+	struct tags *ia = &((struct file *)a)->tags;
+	struct tags *ib = &((struct file *)b)->tags;
 	return strcmp(ia->artist, ib->artist);
 }
 
 int
 titleorder(const void *a, const void *b)
 {
-	struct file *ia = (struct file *)a;
-	struct file *ib = (struct file *)b;
+	struct tags *ia = &((struct file *)a)->tags;
+	struct tags *ib = &((struct file *)b)->tags;
 	return strcmp(ia->title, ib->title);
 }
 
 int
 channelsorder(const void *a, const void *b)
 {
-	struct file *ia = (struct file *)a;
-	struct file *ib = (struct file *)b;
+	struct tags *ia = &((struct file *)a)->tags;
+	struct tags *ib = &((struct file *)b)->tags;
 	if (ia->channels > ib->channels) return 1;
 	else if (ia->channels < ib->channels) return -1;
 	else return 0;
@@ -107,8 +56,8 @@ channelsorder(const void *a, const void *b)
 int
 samplerateorder(const void *a, const void *b)
 {
-	struct file *ia = (struct file *)a;
-	struct file *ib = (struct file *)b;
+	struct tags *ia = &((struct file *)a)->tags;
+	struct tags *ib = &((struct file *)b)->tags;
 	if (ia->samplerate > ib->samplerate) return 1;
 	else if (ia->samplerate < ib->samplerate) return -1;
 	else return 0;
@@ -117,8 +66,8 @@ samplerateorder(const void *a, const void *b)
 int
 bitrateorder(const void *a, const void *b)
 {
-	struct file *ia = (struct file *)a;
-	struct file *ib = (struct file *)b;
+	struct tags *ia = &((struct file *)a)->tags;
+	struct tags *ib = &((struct file *)b)->tags;
 	if (ia->bitrate > ib->bitrate) return 1;
 	else if (ia->bitrate < ib->bitrate) return -1;
 	else return 0;
@@ -127,8 +76,8 @@ bitrateorder(const void *a, const void *b)
 int
 durationorder(const void *a, const void *b)
 {
-	struct file *ia = (struct file *)a;
-	struct file *ib = (struct file *)b;
+	struct tags *ia = &((struct file *)a)->tags;
+	struct tags *ib = &((struct file *)b)->tags;
 	if (ia->duration > ib->duration) return 1;
 	else if (ia->duration < ib->duration) return -1;
 	else return 0;
@@ -137,8 +86,8 @@ durationorder(const void *a, const void *b)
 int
 formatorder(const void *a, const void *b)
 {
-	struct file *ia = (struct file *)a;
-	struct file *ib = (struct file *)b;
+	struct tags *ia = &((struct file *)a)->tags;
+	struct tags *ib = &((struct file *)b)->tags;
 	if (ia->format > ib->format) return 1;
 	else if (ia->format < ib->format) return -1;
 	else return 0;
@@ -185,23 +134,9 @@ add(char *f)
 	files[idx].file = strdup(f);
 	files[idx].idx = idx;
 
-	if ((aux.fd = open(f, O_RDONLY)) < 0) {
-		fprintf(stderr, "open: %s\n", strerror(errno));
+	if (m3tags(f, &files[idx].tags) == -1)
 		return;
-	}
-	aux.file = &files[idx];
-	ctx.filename = files[idx].file;
-	if (tagsget(&ctx)) {
-		fprintf(stderr, "failed to get tags for: %s\n", f);
-		close(aux.fd);
-		return;
-	}
-	files[idx].channels = ctx.channels;
-	files[idx].samplerate = ctx.samplerate;
-	files[idx].bitrate = ctx.bitrate;
-	files[idx].duration = ctx.duration;
-	files[idx].format = ctx.format;
-	close(aux.fd);
+
 	idx++;
 }
 

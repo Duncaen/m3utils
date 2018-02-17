@@ -5,83 +5,19 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "m3u.h"
-#include "tags.h"
-
-struct file {
-	char *artist;
-	char *album;
-	char *title;
-	int channels;
-	int samplerate;
-	int bitrate;
-	int duration;
-	int format;
-};
-
-struct aux {
-	int fd;
-	struct file *file;
-};
+#include "m3utils.h"
 
 long idx = 0;
-
-static char buf[256];
 
 static char default_fflag[] = "%a - %A: %t";
 static char *fflag = default_fflag;
 
-static int
-ctxread(Tagctx *ctx, void *buf, int n)
-{
-	struct aux *a = ctx->aux;
-	return read(a->fd, buf, n);
-}
-
-static int
-ctxseek(Tagctx *ctx, int offset, int whence)
-{
-	struct aux *a = ctx->aux;
-	return lseek(a->fd, offset, whence);
-}
-
-static void
-cb(Tagctx *ctx, int t, const char *v, int offset, int size, Tagread f)
-{
-	struct file *fp = ((struct aux *)ctx->aux)->file;
-	switch (t) {
-	case Tartist: fp->artist = strdup(v); break;
-	case Talbum: fp->album = strdup(v); break;
-	case Ttitle: fp->title = strdup(v); break;
-	}
-}
-
-struct aux aux;
-Tagctx ctx = {
-	.read = ctxread,
-	.seek = ctxseek,
-	.tag = cb,
-	.buf = buf,
-	.bufsz = sizeof (buf),
-	.aux = &aux,
-};
-
 void
 oneline(char *f)
 {
-	struct file fi;
-	if ((aux.fd = open(f, O_RDONLY)) < 0) {
-		fprintf(stderr, "open: %s\n", strerror(errno));
+	struct tags t;
+	if (m3tags(f, &t) == -1)
 		return;
-	}
-	aux.file = &fi;
-	ctx.filename = f;
-	if (tagsget(&ctx)) {
-		fprintf(stderr, "failed to get tags for: %s\n", f);
-		close(aux.fd);
-		return;
-	}
-	close(aux.fd);
 
 	char *p;
 	for (p = fflag; *p; p++) {
@@ -99,21 +35,20 @@ oneline(char *f)
 			putchar('%');
 			break;
 		case 'a':
-			printf("%s", fi.artist);
+			printf("%s", t.artist);
 			break;
 		case 'A':
-			printf("%s", fi.album);
+			printf("%s", t.album);
 			break;
 		case 't':
-			printf("%s", fi.title);
+			printf("%s", t.title);
 			break;
 		case 'd':
-			printf("%d", ctx.duration);
+			printf("%d", t.duration);
 			break;
 		}
 	}
 	putchar('\n');
-
 	idx++;
 }
 

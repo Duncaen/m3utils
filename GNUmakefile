@@ -21,7 +21,7 @@ LIBTAGS_OBJS =\
 all : $(ALL)
 
 $(PROGS) : % : %.o
-m3print m3sort : m3u.o
+m3print m3sort : m3u.o tags.o
 m3print m3sort : $(LIBTAGS_OBJS)
 
 README: man/m3utils.7
