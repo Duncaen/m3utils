@@ -24,7 +24,13 @@ oneline(char *f)
 	char *p;
 	for (p = fflag; *p; p++) {
 		if (*p == '\\') {
-			p++;
+			switch (*++p) {
+			case 'n': putchar('\n'); break;
+			case 't': putchar('\t'); break;
+			default:
+				putchar('\\');
+				putchar(*p);
+			}
 			continue;
 		}
 		if (*p != '%') {
@@ -50,6 +56,9 @@ oneline(char *f)
 		switch (*p) {
 		case '%':
 			putchar('%');
+			break;
+		case 'f':
+			printf("%*s", w, f);
 			break;
 		case 'n':
 			printf("%*d", w, idx);

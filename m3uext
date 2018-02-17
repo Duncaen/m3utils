@@ -1,0 +1,7 @@
+#!/bin/sh
+# m3uext [-f format] -- generate m3u extended playlist
+
+[ "$1" = "-f" ] && { fmt="$2"; shift 2; }
+fmt="#EXTINF:-1,${fmt:=%A - %a - %t}\n%f"
+echo '#EXTM3U'
+exec m3print -f "${fmt}" "$@"
