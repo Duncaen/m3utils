@@ -9,7 +9,7 @@
 
 long idx = 0;
 
-static char default_fflag[] = "%a - %A: %t";
+static char default_fflag[] = "%-3n %a - %A: %t";
 static char *fflag = default_fflag;
 
 void
@@ -18,6 +18,8 @@ oneline(char *f)
 	struct tags t;
 	if (m3tags(f, &t) == -1)
 		return;
+
+	idx++;
 
 	char *p;
 	for (p = fflag; *p; p++) {
@@ -30,26 +32,43 @@ oneline(char *f)
 			continue;
 		}
 		p++;
+
+		int w = 0;
+		if ((*p >= '0' && *p <= '9') || *p == '-') {
+			errno = 0;
+			char *e;
+			w = strtol(p, &e, 10);
+			if (errno != 0)
+				w = 0;
+			else
+				p = e;
+		}
+
+		if (!*p)
+			break;
+
 		switch (*p) {
 		case '%':
 			putchar('%');
 			break;
+		case 'n':
+			printf("%*d", w, idx);
+			break;
 		case 'a':
-			printf("%s", t.artist);
+			printf("%*s", w, t.artist);
 			break;
 		case 'A':
-			printf("%s", t.album);
+			printf("%*s", w, t.album);
 			break;
 		case 't':
-			printf("%s", t.title);
+			printf("%*s", w, t.title);
 			break;
 		case 'd':
-			printf("%d", t.duration);
+			printf("%*d", w, t.duration);
 			break;
 		}
 	}
 	putchar('\n');
-	idx++;
 }
 
 int
