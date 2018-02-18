@@ -7,15 +7,16 @@
 #include "m3utils.h"
 
 enum {
-	Tartist = 1,
-	Talbum = 2,
-	Ttitle = 3,
+	Tall = 1,
+	Tartist,
+	Talbum,
+	Ttitle,
 };
 
 static int iflag = 0;
 
 static long matches = 0;
-static int tag = 0;
+static int tag = Tall;
 
 static regex_t pattern;
 
@@ -43,6 +44,10 @@ oneline(char *f)
 	case Tartist: s = t.artist; break;
 	case Talbum: s = t.album; break;
 	case Ttitle: s = t.title; break;
+	case Tall:
+		if (match(t.artist) || match(t.album) || match(t.title))
+			printf("%s\n", f);
+		return;
 	}
 
 	if (match(s))
@@ -59,26 +64,27 @@ main(int argc, char *argv[])
 		default:
 usage:
 			fprintf(stderr,
-			    "Usage: m3grep [-i] tag:regex\n");
+			    "Usage: m3grep [-i] [[album|artist|title]:]regex\n");
 			exit(1);
 		}
 
 	if (argc == optind)
 		goto usage;
 	char *s = argv[optind++];
-	char *rx = strchr(s, ':');
-	if (!rx)
-		goto usage;
-	*rx++ = '\0';
+	char *rx;
+	if ((rx = strchr(s, ':'))) {
+		*rx++ = '\0';
+		if (!strcmp(s, "artist"))
+			tag = Tartist;
+		else if (!strcmp(s, "album"))
+			tag = Talbum;
+		else if (!strcmp(s, "title"))
+			tag = Ttitle;
+		else
+			goto usage;
+	}
 
-	if (!strcmp(s, "artist"))
-		tag = Tartist;
-	else if (!strcmp(s, "album"))
-		tag = Talbum;
-	else if (!strcmp(s, "title"))
-		tag = Ttitle;
-
-	int r = regcomp(&pattern, rx, REG_EXTENDED | iflag);
+	int r = regcomp(&pattern, rx ? rx : s, REG_EXTENDED | iflag);
 	if (r != 0) {
 		char buf[256];
 		regerror(r, &pattern, buf, sizeof buf);
