@@ -6,9 +6,9 @@ NAME
 DESCRIPTION
      m3utils is a set of Unix utilities to manage media files.
 
-     m3uext(1)    generate extended M3U playlist containing metadata
-     m3grep(1)    print media files matching a pattern in tags
-     m3print(1)   print media file tags
-     m3sort(1)    sort media files
+     m3uext(1)    create extended M3U playlists containing metadata
+     m3grep(1)    print media files with tags matching a pattern
+     m3print(1)   formated printing of media file tags
+     m3sort(1)    sort media files by album, artist, title etc
 
 Void Linux                     February 17, 2018                    Void Linux
