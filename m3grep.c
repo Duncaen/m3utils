@@ -67,6 +67,9 @@ grep(char *f)
 {
 	struct tags t;
 
+	if (*f == '#')
+		return;
+
 	if (m3tags(f, &t) == -1)
 		return;
 

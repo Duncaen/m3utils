@@ -144,6 +144,9 @@ order(const void *a, const void *b)
 void
 add(char *f)
 {
+	if (*f == '#')
+		return;
+
 	if (idx >= filealloc) {
 		filealloc *= 2;
 		if (filealloc < 0)
