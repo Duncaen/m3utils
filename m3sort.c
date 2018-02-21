@@ -94,6 +94,30 @@ formatorder(const void *a, const void *b)
 }
 
 int
+trackorder(const void *a, const void *b)
+{
+	struct tags *ia = &((struct file *)a)->tags;
+	struct tags *ib = &((struct file *)b)->tags;
+
+	if (!ia->trackn) {
+		errno = 0;
+		ia->trackn = strtol(ia->track, NULL, 10);
+		if (errno != 0)
+			ia->trackn = -1;
+	}
+	if (!ib->trackn) {
+		errno = 0;
+		ib->trackn = strtol(ib->track, NULL, 10);
+		if (errno != 0)
+			ia->trackn = -1;
+	}
+
+	if (ia->trackn > ib->trackn) return 1;
+	else if (ia->trackn < ib->trackn) return -1;
+	else return 0;
+}
+
+int
 idxorder(const void *a, const void *b)
 {
 	struct file *ia = (struct file *)a;
@@ -151,10 +175,11 @@ int
 main(int argc, char *argv[])
 {
 	int c, i;
-	while ((c = getopt(argc, argv, "adtA")) != -1)
+	while ((c = getopt(argc, argv, "adntA")) != -1)
 		switch (c) {
 		case 'a': addorder(artistorder); break;
 		case 'd': addorder(durationorder); break;
+		case 'n': addorder(trackorder); break;
 		case 't': addorder(titleorder); break;
 		case 'A': addorder(albumorder); break;
 		default:
