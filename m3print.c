@@ -72,6 +72,9 @@ oneline(char *f)
 		case 't':
 			printf("%*s", w, t.title);
 			break;
+		case 'T':
+			printf("%*s", w, t.track);
+			break;
 		case 'd':
 			printf("%*d", w, t.duration);
 			break;
