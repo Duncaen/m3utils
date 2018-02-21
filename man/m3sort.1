@@ -1,0 +1,32 @@
+.Dd February 21, 2016
+.Dt M3SORT 1
+.Os
+.Sh NAME
+.Nm m3sort
+.Nd sort media files
+.Sh SYNOPSIS
+.Nm
+.Op Fl r
+.Op Fl a | Fl d | Fl n | Fl t | Fl A
+.Sh DESCRIPTION
+.Nm
+sorts media files according to various orders,
+and prints, separated by newlines, the resulting file names.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl r
+Reverse order.
+.It Fl a
+Sort by artist.
+.It Fl d
+Sort by duration.
+.It Fl n
+Sort by track number.
+.It Fl t
+Sort by title.
+.It Fl A
+Sort by album.
+.El
+.Sh EXIT STATUS
+.Ex -std
