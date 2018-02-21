@@ -2,10 +2,7 @@ CFLAGS = -g -Ilibtags/src
 PROGS = m3grep m3print m3sort
 ALL = $(PROGS)
 
-LIBTAGS_CFLAGS = \
-	-D__unix__\
-	-Duint="unsigned int"\
-	-Dushort="unsigned short"
+LIBTAGS_CFLAGS = -D__unix__
 
 LIBTAGS_OBJS =\
 	libtags/src/8859.o\
