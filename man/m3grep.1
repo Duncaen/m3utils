@@ -1,0 +1,84 @@
+.Dd February 21, 2016
+.Dt M3GREP 1
+.Os
+.Sh NAME
+.Nm m3grep
+.Nd print media files with tags matching a pattern
+.Sh SYNOPSIS
+.Nm
+.Op Fl c
+.Op Fl i
+.Op Fl m Ar max
+.Op Fl o
+.Op Fl p
+.Op Fl q
+.Op Fl v
+.Op Ar tag Ns Cm \&: Ns
+.Ar regex
+.Sh DESCRIPTION
+.Nm
+prints the names of files if the value of
+.Ar tag
+matches the POSIX Extended Regular Expression
+.Ar regex .
+.Pp
+If
+.Ar tag
+is empty
+.Nm
+matches against every tag.
+.Pp
+The following tags are available\&:
+.Bl -tag -compact
+.It Sy album
+.It Sy artist
+.It Sy title
+.El
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl c
+Only print the count of matching tags.
+.It Fl i
+Match
+.Ar regex
+case insensitively.
+.It Fl m Ar max
+Do not show more than
+.Ar max
+matches.
+.It Fl o
+Print each match only, not the entire tag.
+This option is ignored if 
+.Fl c ,
+.Fl q
+or
+.Fl v
+is specified.
+.It Fl p
+Print the filename,
+the tag and the matching value for each of the matched files.
+If
+.Fl o
+is specified each match is printed,
+instead of the matching value.
+This option is ignored if 
+.Fl c ,
+.Fl q
+or
+.Fl v
+is specified.
+.It Fl q
+Quiet mode\&:
+do not print anything,
+quit as soon as possible.
+.It Fl v
+Invert the match\&;
+print
+.Pq or count
+all files where
+.Ar regex
+does not match.
+.El
+.Sh EXIT STATUS
+.Ex -std
