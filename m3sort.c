@@ -16,6 +16,8 @@ struct file *files;
 ssize_t filealloc = 1024;
 long idx = 0;
 
+int rflag = 0;
+
 static int (*sortorders[16])(const void *, const void *);
 int order_idx;
 
@@ -175,16 +177,17 @@ int
 main(int argc, char *argv[])
 {
 	int c, i;
-	while ((c = getopt(argc, argv, "adntA")) != -1)
+	while ((c = getopt(argc, argv, "adnrtA")) != -1)
 		switch (c) {
 		case 'a': addorder(artistorder); break;
 		case 'd': addorder(durationorder); break;
 		case 'n': addorder(trackorder); break;
+		case 'r': rflag = 1; break;
 		case 't': addorder(titleorder); break;
 		case 'A': addorder(albumorder); break;
 		default:
 			fprintf(stderr,
-			    "Usage: m3sort [-atAD]\n");
+			    "Usage: m3sort [-r] [-adntA]\n");
 			exit(1);
 		}
 
@@ -198,6 +201,10 @@ main(int argc, char *argv[])
 		m3u_loop(argc-optind, argv+optind, add);
 
 	qsort(files, idx, sizeof (struct file), order);
-	for (i = 0; i < idx; i++)
-		printf("%s\n", files[i].file);
+	if (rflag)
+		for (i = idx-1; i >= 0; i--)
+			printf("%s\n", files[i].file);
+	else
+		for (i = 0; i < idx; i++)
+			printf("%s\n", files[i].file);
 }
