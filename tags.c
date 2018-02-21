@@ -31,9 +31,10 @@ cb(Tagctx *ctx, int t, const char *v, int offset, int size, Tagread f)
 {
 	struct tags *ta = ((struct aux *)ctx->aux)->t;
 	switch (t) {
-	case Tartist: ta->artist = strdup(v); break;
 	case Talbum: ta->album = strdup(v); break;
+	case Tartist: ta->artist = strdup(v); break;
 	case Ttitle: ta->title = strdup(v); break;
+	case Ttrack: ta->track= strdup(v); break;
 	}
 }
 
