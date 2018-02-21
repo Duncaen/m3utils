@@ -1,0 +1,58 @@
+.Dd February 21, 2016
+.Dt M3PRINT 1
+.Os
+.Sh NAME
+.Nm m3print
+.Nd print media file tags
+.Sh SYNOPSIS
+.Nm
+.Op Fl f Ar format
+.Sh DESCRIPTION
+.Nm
+prints media file tags in a specified format.
+.Pp
+The default
+.Ar format
+is 
+.Pp
+.Dl %-3i %a - %A: %t
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl f Ar format
+Format according to the string
+.Ar format ,
+inspired by
+.Xr printf 3 .
+.Pp
+The following formatting codes may be used
+.Po
+.Ar wd
+overrides the default width
+.Pc :
+.Bl -tag -width Ds
+.It Cm \en
+Newline.
+.It Cm \et
+Tab.
+.It Cm \&%%
+A plain
+.Sq Li \&% .
+.It Cm "%" Ns Oo Ar wd Oc Ns Cm "A"
+The album name.
+.It Cm "%" Ns Oo Ar wd Oc Ns Cm "a"
+The artist.
+.It Cm "%" Ns Oo Ar wd Oc Ns Cm "d"
+The duration.
+.It Cm "%" Ns Oo Ar wd Oc Ns Cm "f"
+The filename.
+.It Cm "%" Ns Oo Ar wd Oc Ns Cm "i"
+The index number.
+.It Cm "%" Ns Oo Ar wd Oc Ns Cm "n"
+The track number.
+.It Cm "%" Ns Oo Ar wd Oc Ns Cm "t"
+The title.
+.El
+.El
+.Sh EXIT STATUS
+.Ex -std
