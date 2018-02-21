@@ -9,7 +9,7 @@
 
 long idx = 0;
 
-static char default_fflag[] = "%-3n %a - %A: %t";
+static char default_fflag[] = "%-3i %a - %A: %t";
 static char *fflag = default_fflag;
 
 void
@@ -60,7 +60,7 @@ oneline(char *f)
 		case 'f':
 			printf("%*s", w, f);
 			break;
-		case 'n':
+		case 'i':
 			printf("%*d", w, idx);
 			break;
 		case 'a':
@@ -72,7 +72,7 @@ oneline(char *f)
 		case 't':
 			printf("%*s", w, t.title);
 			break;
-		case 'T':
+		case 'n':
 			printf("%*s", w, t.track);
 			break;
 		case 'd':
@@ -92,7 +92,7 @@ main(int argc, char *argv[])
 		case 'f': fflag = optarg; break;
 		default:
 			fprintf(stderr,
-			    "Usage: m3print\n");
+			    "Usage: m3print [-f format]\n");
 			exit(1);
 		}
 
