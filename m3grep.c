@@ -106,7 +106,7 @@ main(int argc, char *argv[])
 		default:
 usage:
 			fprintf(stderr,
-			    "Usage: m3grep [-i] [-m max] [tag:]regex\n");
+			    "Usage: m3grep [-ciopqv] [-m max] [tag:]regex\n");
 			exit(1);
 		}
 
