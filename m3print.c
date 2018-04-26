@@ -9,7 +9,7 @@
 
 long idx = 0;
 
-static char default_fflag[] = "%-3i %a - %A: %t";
+static char default_fflag[] = "%-3i %T - %a: %t";
 static char *fflag = default_fflag;
 
 void
@@ -67,11 +67,14 @@ oneline(char *f)
 		case 'i':
 			printf("%*d", w, idx);
 			break;
-		case 'a':
-			printf("%*s", w, t.artist);
+		case 'T':
+			printf("%*s", w, t.album);
 			break;
 		case 'A':
-			printf("%*s", w, t.album);
+			printf("%*s", w, t.albumartist);
+			break;
+		case 'a':
+			printf("%*s", w, t.artist);
 			break;
 		case 't':
 			printf("%*s", w, t.title);
