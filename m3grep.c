@@ -9,6 +9,7 @@
 enum {
 	Tall = 1,
 	Talbum,
+	Talbumartist,
 	Tartist,
 	Ttitle,
 };
@@ -75,6 +76,7 @@ grep(char *f)
 
 	switch (tag) {
 	case Talbum: match(f, "album", t.album); break;
+	case Talbumartist: match(f, "albumartist", t.albumartist); break;
 	case Tartist: match(f, "artist", t.artist); break;
 	case Ttitle: match(f, "title", t.title); break;
 	case Tall:
@@ -116,10 +118,12 @@ usage:
 	char *rx;
 	if ((rx = strchr(s, ':'))) {
 		*rx++ = '\0';
-		if (!strcmp(s, "artist"))
-			tag = Tartist;
-		else if (!strcmp(s, "album"))
+		if (!strcmp(s, "album"))
 			tag = Talbum;
+		else if (!strcmp(s, "albumartist"))
+			tag = Talbumartist;
+		else if (!strcmp(s, "artist"))
+			tag = Tartist;
 		else if (!strcmp(s, "title"))
 			tag = Ttitle;
 		else
