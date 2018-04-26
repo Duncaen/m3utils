@@ -7,7 +7,7 @@
 .Sh SYNOPSIS
 .Nm
 .Op Fl r
-.Op Fl a | Fl d | Fl n | Fl t | Fl A
+.Op Fl a | Fl A | Fl d | Fl n | Fl t | Fl T
 .Sh DESCRIPTION
 .Nm
 sorts media files according to various orders,
@@ -17,16 +17,18 @@ The options are as follows:
 .Bl -tag -width Ds
 .It Fl r
 Reverse order.
+.It Fl A
+Sort by album artists.
 .It Fl a
-Sort by artist.
+Sort by artists.
 .It Fl d
 Sort by duration.
 .It Fl n
 Sort by track number.
 .It Fl t
 Sort by title.
-.It Fl A
-Sort by album.
+.It Fl T
+Sort by album title.
 .El
 .Sh EXIT STATUS
 .Ex -std

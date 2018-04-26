@@ -30,6 +30,14 @@ albumorder(const void *a, const void *b)
 }
 
 int
+albumartistorder(const void *a, const void *b)
+{
+	struct tags *ia = &((struct file *)a)->tags;
+	struct tags *ib = &((struct file *)b)->tags;
+	return strcmp(ia->albumartist, ib->albumartist);
+}
+
+int
 artistorder(const void *a, const void *b)
 {
 	struct tags *ia = &((struct file *)a)->tags;
@@ -180,14 +188,15 @@ int
 main(int argc, char *argv[])
 {
 	int c, i;
-	while ((c = getopt(argc, argv, "adnrtA")) != -1)
+	while ((c = getopt(argc, argv, "aAdnrtT")) != -1)
 		switch (c) {
 		case 'a': addorder(artistorder); break;
+		case 'A': addorder(albumartistorder); break;
 		case 'd': addorder(durationorder); break;
 		case 'n': addorder(trackorder); break;
 		case 'r': rflag = 1; break;
 		case 't': addorder(titleorder); break;
-		case 'A': addorder(albumorder); break;
+		case 'T': addorder(albumorder); break;
 		default:
 			fprintf(stderr,
 			    "Usage: m3sort [-r] [-adntA]\n");
