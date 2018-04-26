@@ -19,7 +19,7 @@ long idx = 0;
 int rflag = 0;
 
 static int (*sortorders[16])(const void *, const void *);
-int order_idx;
+int order_idx = 0;
 
 int
 albumorder(const void *a, const void *b)
@@ -202,6 +202,11 @@ main(int argc, char *argv[])
 			    "Usage: m3sort [-r] [-adntA]\n");
 			exit(1);
 		}
+
+	if (order_idx == 0) {
+		addorder(albumorder);
+		addorder(trackorder);
+	}
 
 	files = calloc(sizeof (struct file), filealloc);
 	if (!files)
