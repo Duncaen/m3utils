@@ -20,8 +20,10 @@ v2cb(Tagctx *ctx, char *k, char *v)
 	k++;
 	if(strcmp(k, "AL") == 0 || strcmp(k, "ALB") == 0)
 		txtcb(ctx, Talbum, v);
-	else if(strcmp(k, "PE1") == 0 || strcmp(k, "PE2") == 0 || strcmp(k, "P1") == 0 || strcmp(k, "P2") == 0)
+	else if(strcmp(k, "PE1") == 0 || strcmp(k, "P1") == 0)
 		txtcb(ctx, Tartist, v);
+	else if(strcmp(k, "PE2") == 0 || strcmp(k, "P2") == 0)
+		txtcb(ctx, Talbumartist, v);
 	else if(strcmp(k, "IT2") == 0 || strcmp(k, "T2") == 0)
 		txtcb(ctx, Ttitle, v);
 	else if(strcmp(k, "YE") == 0 || strcmp(k, "YER") == 0 || strcmp(k, "DRC") == 0)
