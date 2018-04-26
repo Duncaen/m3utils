@@ -1,7 +1,8 @@
 // tags.c
 struct tags {
-	char *artist;
 	char *album;
+	char *albumartist;
+	char *artist;
 	char *title;
 	char *track;
 	int channels;

@@ -32,6 +32,7 @@ cb(Tagctx *ctx, int t, const char *v, int offset, int size, Tagread f)
 	struct tags *ta = ((struct aux *)ctx->aux)->t;
 	switch (t) {
 	case Talbum: ta->album = strdup(v); break;
+	case Talbumartist: ta->albumartist = strdup(v); break;
 	case Tartist: ta->artist = strdup(v); break;
 	case Ttitle: ta->title = strdup(v); break;
 	case Ttrack: ta->track= strdup(v); break;
@@ -65,6 +66,7 @@ m3tags(char *file, struct tags *t)
 	t->bitrate = ctx.bitrate;
 	t->duration = ctx.duration;
 	t->format = ctx.format;
+	if (!t->albumartist) t->albumartist = t->artist;
 	close(aux.fd);
 	return 0;
 }
