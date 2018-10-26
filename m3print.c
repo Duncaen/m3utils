@@ -65,7 +65,7 @@ oneline(char *f)
 			printf("%*s", w, f);
 			break;
 		case 'i':
-			printf("%*d", w, idx);
+			printf("%*ld", w, idx);
 			break;
 		case 'T':
 			printf("%*s", w, t.album);
